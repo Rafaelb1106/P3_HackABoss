@@ -9,7 +9,7 @@ streamlit-folium==0.12.0
 requests==2.31.0
 textblob==0.17.1
 lxml
-cmake==3.26.4
+cmake>=3.0.0
 dlib==19.24.0
 face-recognition==1.3.0
 face-recognition-models==0.3.0
