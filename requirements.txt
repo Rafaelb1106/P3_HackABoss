@@ -1,13 +1,4 @@
 numpy
 scipy
 streamlit
-pillow
-requests
-opencv-python-headless==4.5.4.60
-opencv-contrib-python-headless==4.5.4.60
-tensorflow-cpu
-torch
-face-alignment
-onnxruntime
-dlib-binary
-gdown
+face_recognition
