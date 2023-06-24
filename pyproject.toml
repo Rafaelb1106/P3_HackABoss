@@ -1,0 +1,20 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "reco"
+version = "0.1.0"
+description = "My Streamlit project"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+streamlit = "^1.0.0"
+dlib = "^19.22"
+cmake = "^3.21.3"
+face-recognition = "^1.3.0"
+opencv-python = "^4.7.0.72"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
