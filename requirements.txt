@@ -1,4 +1,5 @@
-cmake
-dlib
+streamlit
 numpy
-opencv-python
+pandas
+requests
+Pillow
