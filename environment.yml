@@ -9,7 +9,7 @@ dependencies:
   - seaborn
   - scikit-learn
   - cmake
-  - dlib
+  - pip
   - pip:
     - face_recognition
     - opencv-python
