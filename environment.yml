@@ -13,3 +13,4 @@ dependencies:
   - pip:
     - face_recognition
     - opencv-python
+    - dlib=19.22
