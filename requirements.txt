@@ -1,5 +1,5 @@
 numpy
 scipy
 streamlit
-dlib-binary==19.21.99
+dlib-bin
 face_recognition
