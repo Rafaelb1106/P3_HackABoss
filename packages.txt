@@ -1,2 +1,2 @@
 cmake
-libgl1
+streamlit==0.84.2
