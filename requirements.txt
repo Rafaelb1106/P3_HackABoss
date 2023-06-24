@@ -1,5 +1,5 @@
 cmake
 streamlit==1.23.1
 dlib-bin
-face_recognition==1.2.3
+face_recognition @ git+https://github.com/thetoby9944/face_recognition
 opencv-python==4.5.3.56
