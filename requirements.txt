@@ -1,4 +1,3 @@
---update pip
 cmake
 streamlit==1.23.1
 face_recognition==1.2.3
