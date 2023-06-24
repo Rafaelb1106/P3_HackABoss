@@ -1,5 +1,0 @@
-cmake
-streamlit==1.23.1
-dlib-bin
-face_recognition==1.2.3
-opencv-python==4.5.3.56
