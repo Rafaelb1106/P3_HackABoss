@@ -6,7 +6,7 @@ build-backend = "poetry.core.masonry.api"
 name = "reco"
 version = "0.1.0"
 description = "My Streamlit project"
-authors = "rafa <rafaelb1106@hotmail.com>"
+authors = ["rafa <rafaelb1106@hotmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
