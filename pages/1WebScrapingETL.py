@@ -211,338 +211,340 @@ def main():
 
         #se controla si la palabra de búsqueda existe no vuelva a buscar
         if len(records) == 0:
-            
-            ####### WEB SCRAPPING IMDB #######
-            ####### OBTENER REGISTROS #######
-            browser = webdriver.Chrome(ChromeDriverManager().install())
-            browser.get("https://imdb.com")
-            browser.maximize_window()
-            sleep(2)
-            buscador  = browser.find_element_by_xpath('//*[@id="suggestion-search"]')
-            sleep(1)
-            buscador.clear()
-            sleep(3)
-            buscador.clear()
-            sleep(3)
-            buscador.send_keys(busqueda)
-            sleep(3)
-            buscador.submit()
-            sleep(3)
+            try:
+                ####### WEB SCRAPPING IMDB #######
+                ####### OBTENER REGISTROS #######
+                browser = webdriver.Chrome(ChromeDriverManager().install())
+                browser.get("https://imdb.com")
+                browser.maximize_window()
+                sleep(2)
+                buscador  = browser.find_element_by_xpath('//*[@id="suggestion-search"]')
+                sleep(1)
+                buscador.clear()
+                sleep(3)
+                buscador.clear()
+                sleep(3)
+                buscador.send_keys(busqueda)
+                sleep(3)
+                buscador.submit()
+                sleep(3)
 
-            # ENCONTRAR BOTÓN MÁS RESULTADOS
+                # ENCONTRAR BOTÓN MÁS RESULTADOS
 
-            boton = browser.find_element_by_css_selector(".find-see-more-title-btn > button:nth-child(1)")
+                boton = browser.find_element_by_css_selector(".find-see-more-title-btn > button:nth-child(1)")
 
-            element = browser.find_element_by_xpath("//h3[contains(text(),'Títulos')]")
+                element = browser.find_element_by_xpath("//h3[contains(text(),'Títulos')]")
 
-            # BUCLE CON CLICS AL BOTÓN MÁS RESULTADOS
+                # BUCLE CON CLICS AL BOTÓN MÁS RESULTADOS
 
-            for y in range(0,2):
-                try:
-                    browser.execute_script("arguments[0].scrollIntoView(true);", boton)
-                    sleep(3)
-                    boton.click()
-                except:
-                    pass
+                for y in range(0,2):
+                    try:
+                        browser.execute_script("arguments[0].scrollIntoView(true);", boton)
+                        sleep(3)
+                        boton.click()
+                    except:
+                        pass
 
-            # CREACIÓN DE LISTA CON URLS DE LOS LINKS EN RESULTADOS
+                # CREACIÓN DE LISTA CON URLS DE LOS LINKS EN RESULTADOS
 
-            soup = BeautifulSoup(browser.page_source, "html.parser")
+                soup = BeautifulSoup(browser.page_source, "html.parser")
 
-            lista_pelis = soup.find_all('li', class_= 'ipc-metadata-list-summary-item ipc-metadata-list-summary-item--click find-result-item find-title-result')
+                lista_pelis = soup.find_all('li', class_= 'ipc-metadata-list-summary-item ipc-metadata-list-summary-item--click find-result-item find-title-result')
 
-            urls_pelis = list()
+                urls_pelis = list()
 
-            for i in lista_pelis:
-                pelis = i.find('a')
-                urls = 'https://www.imdb.com' + pelis['href']
-                urls_pelis.append(urls)
+                for i in lista_pelis:
+                    pelis = i.find('a')
+                    urls = 'https://www.imdb.com' + pelis['href']
+                    urls_pelis.append(urls)
 
-            # CREACIÓN DE LISTAS VACÍAS PARA USAR EN EL SCRAPPING POR PÁGINA
+                # CREACIÓN DE LISTAS VACÍAS PARA USAR EN EL SCRAPPING POR PÁGINA
 
-            titulos = list()
-            fecha = list()
-            sinopsis = list()
-            idioma_original = list()
-            rating = list()
-            ratingCount = list()
-            genero = list()
-            director = list()
-            busqueda_input = list()
-            mejor_calificacion = list()
-            peor_calificacion = list()
+                titulos = list()
+                fecha = list()
+                sinopsis = list()
+                idioma_original = list()
+                rating = list()
+                ratingCount = list()
+                genero = list()
+                director = list()
+                busqueda_input = list()
+                mejor_calificacion = list()
+                peor_calificacion = list()
 
-            url_trailer = []
-            actores = []
-            duracion = []
-            clasificasion = []
+                url_trailer = []
+                actores = []
+                duracion = []
+                clasificasion = []
 
-            score = []
-            resena_critic =[]
-            resena_user = []
-            premios = []
-            nominaciones = []
+                score = []
+                resena_critic =[]
+                resena_user = []
+                premios = []
+                nominaciones = []
 
-            # BUCLE QUE RECORRE CADA PÁGINA EN LA LISTA DE URLS
+                # BUCLE QUE RECORRE CADA PÁGINA EN LA LISTA DE URLS
 
-            for i in urls_pelis:
+                for i in urls_pelis:
 
-                try:
-                    browser.get(i)
-                    # Revision
-                    # sleep(1)
-                    html = browser.page_source
-                    soup = BeautifulSoup(html, "html.parser")
-                except:
-                    pass
+                    try:
+                        browser.get(i)
+                        # Revision
+                        # sleep(1)
+                        html = browser.page_source
+                        soup = BeautifulSoup(html, "html.parser")
+                    except:
+                        pass
 
-            # EXTRACCIÓN DE DATOS DE CADA PÁGINA
+                # EXTRACCIÓN DE DATOS DE CADA PÁGINA
 
-                try:
-                    titulos.append(soup.find('h1').text)
-                except:
-                    # Revision
-                    # titulos.append(np.nan)
-                    titulos.append('Sin datos')
+                    try:
+                        titulos.append(soup.find('h1').text)
+                    except:
+                        # Revision
+                        # titulos.append(np.nan)
+                        titulos.append('Sin datos')
 
-                try:
-                    duracion_find = soup.find('ul', class_='ipc-inline-list ipc-inline-list--show-dividers sc-afe43def-4 kdXikI baseAlt')
-                    duracion_list = duracion_find.find_all('li', class_='ipc-inline-list__item')
-                    duracion_3 = duracion_list[2]
-                    duracion_text = duracion_3.text
-                    
-                    if 'h' in duracion_text and 'min' in duracion_text:
+                    try:
+                        duracion_find = soup.find('ul', class_='ipc-inline-list ipc-inline-list--show-dividers sc-afe43def-4 kdXikI baseAlt')
+                        duracion_list = duracion_find.find_all('li', class_='ipc-inline-list__item')
+                        duracion_3 = duracion_list[2]
+                        duracion_text = duracion_3.text
                         
-                        partes = duracion_text.split()
-                        horas = int(partes[0].replace('h', ''))
-                        minutos = int(partes[1].replace('min', ''))
-                        
-                    elif 'h' in duracion_text:
-                        
-                        horas = int(duracion_text.replace('h', ''))
-                        minutos = 0
-                        
-                    elif 'min' in duracion_text:
-                        
-                        horas = 0
-                        minutos = int(duracion_text.replace('min', ''))
-                        
-                    else:
-                        horas = 0
-                        minutos = 0
-                        
-                    duracion_total = horas*60 + minutos
-                    duracion.append(duracion_total)
-                    
-                except:
-                    
-                    duracion.append(0)
-                    # Revision
-                    # duracion.append(np.nan)
-
-                try:
-                    premios_find = soup.find('span', {'class': 'ipc-metadata-list-item__list-content-item'})
-                    premios_text = premios_find.text
-                    premios_list = premios_text.split()
-                                                    
-                    if 'premios' in premios_list or 'premio' in premios_list:
-                        
-                        if 'premios' in premios_list:
+                        if 'h' in duracion_text and 'min' in duracion_text:
                             
-                            premios_index = premios_list.index('premios') - 1
+                            partes = duracion_text.split()
+                            horas = int(partes[0].replace('h', ''))
+                            minutos = int(partes[1].replace('min', ''))
                             
-                        elif 'premio' in premios_list:
+                        elif 'h' in duracion_text:
                             
-                            premios_index = premios_list.index('premio') - 1
+                            horas = int(duracion_text.replace('h', ''))
+                            minutos = 0
                             
-                        premios.append(int(premios_list[premios_index]))
+                        elif 'min' in duracion_text:
+                            
+                            horas = 0
+                            minutos = int(duracion_text.replace('min', ''))
+                            
+                        else:
+                            horas = 0
+                            minutos = 0
+                            
+                        duracion_total = horas*60 + minutos
+                        duracion.append(duracion_total)
                         
-                    else:
+                    except:
+                        
+                        duracion.append(0)
+                        # Revision
+                        # duracion.append(np.nan)
+
+                    try:
+                        premios_find = soup.find('span', {'class': 'ipc-metadata-list-item__list-content-item'})
+                        premios_text = premios_find.text
+                        premios_list = premios_text.split()
+                                                        
+                        if 'premios' in premios_list or 'premio' in premios_list:
+                            
+                            if 'premios' in premios_list:
+                                
+                                premios_index = premios_list.index('premios') - 1
+                                
+                            elif 'premio' in premios_list:
+                                
+                                premios_index = premios_list.index('premio') - 1
+                                
+                            premios.append(int(premios_list[premios_index]))
+                            
+                        else:
+                            premios.append(0)
+                            
+                    except:
+                        
                         premios.append(0)
                         
-                except:
-                    
-                    premios.append(0)
-                    
-                try:
-                    nominaciones_find = soup.find('span', {'class': 'ipc-metadata-list-item__list-content-item'})
-                    nominaciones_text = nominaciones_find.text
-                    nominaciones_list = nominaciones_text.split()
-                    
-                    # Se puede simplificar el if
-                    
-                    if 'nominaciones' in nominaciones_list or 'nominación' in nominaciones_list or 'nominacion' in nominaciones_list:
-                        if 'nominaciones' in nominaciones_list:
-                            nominaciones_index = nominaciones_list.index('nominaciones') - 1
-                            nominaciones.append(int(nominaciones_list[nominaciones_index]))
-                        elif 'nominación' in nominaciones_list:
-                            nominaciones_index = nominaciones_list.index('nominación') - 1
-                            nominaciones.append(int(nominaciones_list[nominaciones_index]))
-                        elif 'nominacion' in nominaciones_list:
-                            nominaciones_index = nominaciones_list.index('nominacion') - 1
-                            nominaciones.append(int(nominaciones_list[nominaciones_index]))
-                    else:
+                    try:
+                        nominaciones_find = soup.find('span', {'class': 'ipc-metadata-list-item__list-content-item'})
+                        nominaciones_text = nominaciones_find.text
+                        nominaciones_list = nominaciones_text.split()
+                        
+                        # Se puede simplificar el if
+                        
+                        if 'nominaciones' in nominaciones_list or 'nominación' in nominaciones_list or 'nominacion' in nominaciones_list:
+                            if 'nominaciones' in nominaciones_list:
+                                nominaciones_index = nominaciones_list.index('nominaciones') - 1
+                                nominaciones.append(int(nominaciones_list[nominaciones_index]))
+                            elif 'nominación' in nominaciones_list:
+                                nominaciones_index = nominaciones_list.index('nominación') - 1
+                                nominaciones.append(int(nominaciones_list[nominaciones_index]))
+                            elif 'nominacion' in nominaciones_list:
+                                nominaciones_index = nominaciones_list.index('nominacion') - 1
+                                nominaciones.append(int(nominaciones_list[nominaciones_index]))
+                        else:
+                            nominaciones.append(0)
+                    except:
                         nominaciones.append(0)
-                except:
-                    nominaciones.append(0)
 
-                try:
-                    script = soup.find('script', type='application/ld+json').string
-                except:
-                    pass
+                    try:
+                        script = soup.find('script', type='application/ld+json').string
+                    except:
+                        pass
 
-                data = json.loads(script)
+                    data = json.loads(script)
 
-                try:
-                    fecha.append(data['datePublished'])
-                except:
-                    # Revision
-                    # np.nan
-                    fecha.append('Sin datos')
+                    try:
+                        fecha.append(data['datePublished'])
+                    except:
+                        # Revision
+                        # np.nan
+                        fecha.append('Sin datos')
 
-                try:
-                    sinopsis.append(data['description'])
-                except:
-                    # Revision
-                    # np.nan
-                    sinopsis.append('Sin datos')
+                    try:
+                        sinopsis.append(data['description'])
+                    except:
+                        # Revision
+                        # np.nan
+                        sinopsis.append('Sin datos')
 
-                try:
-                    idioma_original.append(data['review']['inLanguage'])
-                except:
-                    # Revision
-                    # np.nan
-                    idioma_original.append('Sin datos')
+                    try:
+                        idioma_original.append(data['review']['inLanguage'])
+                    except:
+                        # Revision
+                        # np.nan
+                        idioma_original.append('Sin datos')
 
-                try:
-                    rating.append(data['aggregateRating']['ratingValue'])
-                except:
-                    rating.append(0)
+                    try:
+                        rating.append(data['aggregateRating']['ratingValue'])
+                    except:
+                        rating.append(0)
 
-                try:
-                    ratingCount.append(data['aggregateRating']['ratingCount'])
-                except:
-                    ratingCount.append(0)
+                    try:
+                        ratingCount.append(data['aggregateRating']['ratingCount'])
+                    except:
+                        ratingCount.append(0)
 
-                try:
-                    genero.append(data['genre']) 
-                except:
-                    # Revision
-                    # np.nan
-                    genero.append('Sin datos')
+                    try:
+                        genero.append(data['genre']) 
+                    except:
+                        # Revision
+                        # np.nan
+                        genero.append('Sin datos')
 
-                try:
-                    director.append([director['name'] for director in data['director']])
-                except:
-                    # Revision
-                    # np.nan
-                    director.append('Sin datos')
+                    try:
+                        director.append([director['name'] for director in data['director']])
+                    except:
+                        # Revision
+                        # np.nan
+                        director.append('Sin datos')
 
-                busqueda_input.append(busqueda)
+                    busqueda_input.append(busqueda)
 
-                try:
-                    clasificasion.append(data['contentRating'])
-                except:
-                    # Revision
-                    # np.nan
-                    clasificasion.append('Sin datos')  
+                    try:
+                        clasificasion.append(data['contentRating'])
+                    except:
+                        # Revision
+                        # np.nan
+                        clasificasion.append('Sin datos')  
 
-                try:
-                    url_trailer.append(data['trailer']['embedUrl'])
-                except:
-                    # Revision
-                    # np.nan
-                    url_trailer.append('Sin datos')
+                    try:
+                        url_trailer.append(data['trailer']['embedUrl'])
+                    except:
+                        # Revision
+                        # np.nan
+                        url_trailer.append('Sin datos')
 
-                try:
-                    actores.append([actor['name'] for actor in data['actor']])
-                except:
-                    # Revision
-                    # np.nan
-                    actores.append('Sin datos')
+                    try:
+                        actores.append([actor['name'] for actor in data['actor']])
+                    except:
+                        # Revision
+                        # np.nan
+                        actores.append('Sin datos')
 
-                reviews = soup.select('ul[data-testid="reviewContent-all-reviews"] li')
-                has_user_review = False
-                has_critic_review = False
+                    reviews = soup.select('ul[data-testid="reviewContent-all-reviews"] li')
+                    has_user_review = False
+                    has_critic_review = False
 
-                for review in reviews:
-                    label = review.select_one('.label').text.strip()
-                    score = review.select_one('.score').text.strip()
+                    for review in reviews:
+                        label = review.select_one('.label').text.strip()
+                        score = review.select_one('.score').text.strip()
 
-                    if label == "Reseñas de usuarios":
-                        resena_user.append(score)
-                        has_user_review = True
+                        if label == "Reseñas de usuarios":
+                            resena_user.append(score)
+                            has_user_review = True
 
-                    elif label == "Reseñas de críticos":
-                        resena_critic.append(score)
-                        has_critic_review = True
+                        elif label == "Reseñas de críticos":
+                            resena_critic.append(score)
+                            has_critic_review = True
 
-                if not has_user_review:
-                    resena_user.append(0)
+                    if not has_user_review:
+                        resena_user.append(0)
 
-                if not has_critic_review:
-                    resena_critic.append(0)
+                    if not has_critic_review:
+                        resena_critic.append(0)
 
-            # CONVERTIR STRING DE RESEÑAS EN NÚMERO
+                # CONVERTIR STRING DE RESEÑAS EN NÚMERO
 
-            for i in range(len(resena_user)):
-                try:
-                    if resena_user[i][-1] == 'K':
-                        resena_user[i] = float(resena_user[i][:-1]) * 1000
-                    elif resena_user[i][-1] == 'M':
-                        resena_user[i] = float(resena_user[i][:-1]) * 1000000
-                    elif resena_user[i] == 'Sin datos':
-                        resena_user[i] = 0
-                    else:
-                        resena_user[i] = float(resena_user[i])
-                except TypeError:
-                    pass
+                for i in range(len(resena_user)):
+                    try:
+                        if resena_user[i][-1] == 'K':
+                            resena_user[i] = float(resena_user[i][:-1]) * 1000
+                        elif resena_user[i][-1] == 'M':
+                            resena_user[i] = float(resena_user[i][:-1]) * 1000000
+                        elif resena_user[i] == 'Sin datos':
+                            resena_user[i] = 0
+                        else:
+                            resena_user[i] = float(resena_user[i])
+                    except TypeError:
+                        pass
 
 
-            # CREACIÓN DEL DATAFRAME                          
-            data_pelis = pd.DataFrame()
+                # CREACIÓN DEL DATAFRAME                          
+                data_pelis = pd.DataFrame()
 
-            data_pelis['Título'] = titulos #str
-            data_pelis['Busqueda'] = busqueda_input #str
-            data_pelis['Fecha'] = fecha #datetime
-            data_pelis['Género'] = genero #str
-            data_pelis['Director'] = director #str
-            data_pelis['Reparto'] = actores #str
-            data_pelis['Sinopsis'] = sinopsis #str
-            data_pelis['Duración'] = duracion #int
-            data_pelis['Idioma original'] = idioma_original #str
-            data_pelis['Rating'] = rating #float
-            data_pelis['Votos rating'] = ratingCount #int
-            data_pelis['URL Trailer'] = url_trailer #float
-            data_pelis['Clasificación'] = clasificasion #str
-            data_pelis['Reseñas Usuarios'] = resena_user #int
-            data_pelis['Reseñas Críticos'] = resena_critic #int
-            data_pelis['Premios'] = premios
-            data_pelis['Nominaciones'] = nominaciones
+                data_pelis['Título'] = titulos #str
+                data_pelis['Busqueda'] = busqueda_input #str
+                data_pelis['Fecha'] = fecha #datetime
+                data_pelis['Género'] = genero #str
+                data_pelis['Director'] = director #str
+                data_pelis['Reparto'] = actores #str
+                data_pelis['Sinopsis'] = sinopsis #str
+                data_pelis['Duración'] = duracion #int
+                data_pelis['Idioma original'] = idioma_original #str
+                data_pelis['Rating'] = rating #float
+                data_pelis['Votos rating'] = ratingCount #int
+                data_pelis['URL Trailer'] = url_trailer #float
+                data_pelis['Clasificación'] = clasificasion #str
+                data_pelis['Reseñas Usuarios'] = resena_user #int
+                data_pelis['Reseñas Críticos'] = resena_critic #int
+                data_pelis['Premios'] = premios
+                data_pelis['Nominaciones'] = nominaciones
 
-            # NORMALIZACIÓN DE COLUMNAS NUMÉRICAS
+                # NORMALIZACIÓN DE COLUMNAS NUMÉRICAS
 
-            data_pelis['Duración'] = data_pelis['Duración'].apply(float)
-            data_pelis['Rating'] = data_pelis['Rating'].apply(float)
-            data_pelis['Votos rating'] = data_pelis['Votos rating'].apply(float)
-            data_pelis['Clasificación'] = data_pelis['Clasificación'].apply(str)
-            data_pelis['Reseñas Críticos'] = data_pelis['Reseñas Críticos'].apply(float)
-            data_pelis['Premios'] = data_pelis['Premios'].apply(float)
-            data_pelis['Nominaciones'] = data_pelis['Nominaciones'].apply(float)
+                data_pelis['Duración'] = data_pelis['Duración'].apply(float)
+                data_pelis['Rating'] = data_pelis['Rating'].apply(float)
+                data_pelis['Votos rating'] = data_pelis['Votos rating'].apply(float)
+                data_pelis['Clasificación'] = data_pelis['Clasificación'].apply(str)
+                data_pelis['Reseñas Críticos'] = data_pelis['Reseñas Críticos'].apply(float)
+                data_pelis['Premios'] = data_pelis['Premios'].apply(float)
+                data_pelis['Nominaciones'] = data_pelis['Nominaciones'].apply(float)
 
 
-            ###### BUCLE PARA CREAR EL JSON A PARTIR DEL DATAFRAME ######
+                ###### BUCLE PARA CREAR EL JSON A PARTIR DEL DATAFRAME ######
 
-            #### INSERTA EL DF EN AIRTABLE
-            if insertardf(data_pelis , BASE_ID, TABLE_ID, API_KEY):
-                print("Exito")
-                ban = 1
+                #### INSERTA EL DF EN AIRTABLE
+                if insertardf(data_pelis , BASE_ID, TABLE_ID, API_KEY):
+                    print("Exito")
+                    ban = 1
+                else:
+                    print("Fallo")        
+                browser.quit()
+            except:
+                st.warning('¡Hola! Lamentablemente, debido a las restricciones de ejecución en el entorno de Streamlit Sharing, no es posible utilizar Selenium WebDriver para automatizar acciones en un navegador web. Esto significa que no puedo ejecutar el código que involucra la apertura de un navegador y realizar tareas como web scraping.')
             else:
-                print("Fallo")        
-            browser.quit()
-        else:
-            st.warning('La palabra clave ya existe en nuestra Base de Datos, procedemos a las gráficas sin hacer scraping')                        
-            ban = 1                        
+                st.warning('La palabra clave ya existe en nuestra Base de Datos, procedemos a las gráficas sin hacer scraping')                        
+                ban = 1                        
     
     if ban == 1:
         if opt == 1:
