@@ -541,7 +541,7 @@ def main():
                     print("Fallo")        
                 browser.quit()
             except:
-                st.warning('¡Hola! Lamentablemente, debido a las restricciones de ejecución en el entorno de Streamlit Sharing, no es posible utilizar Selenium WebDriver para automatizar acciones en un navegador web. Esto significa que no puedo ejecutar el código que involucra la apertura de un navegador y realizar tareas como web scraping.')
+                st.warning('¡Hola! Lamentablemente, debido a las restricciones de ejecución en el entorno de Streamlit Sharing, no es posible utilizar Selenium WebDriver para automatizar acciones en un navegador web. Esto significa que no puedo ejecutar el código que involucra la apertura de un navegador y realizar tareas como web scraping. Si necesitas realizar web scraping u otras tareas que involucren navegadores web, es posible que debas considerar otras opciones de implementación, como ejecutar tu aplicación en tu propio entorno local o en un servidor dedicado donde tengas control sobre la configuración del entorno y puedas ejecutar Selenium WebDriver sin restricciones.')
             else:
                 st.warning('La palabra clave ya existe en nuestra Base de Datos, procedemos a las gráficas sin hacer scraping')                        
                 ban = 1                        
