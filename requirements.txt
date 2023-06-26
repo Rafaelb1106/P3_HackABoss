@@ -21,7 +21,6 @@ webencodings==0.5.1
 datetime
 requests==2.26.0
 beautifulsoup4==4.9.3
-pprint
 json
 re
 warnings
