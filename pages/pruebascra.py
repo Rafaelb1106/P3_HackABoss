@@ -2,8 +2,8 @@ from playwright.sync_api import sync_playwright
 
 def main():
     with sync_playwright() as playwright:
-        #browser = playwright.chromium.launch(headless=True)
-        browser = playwright.chromium.launch(headless=False)
+        browser = playwright.chromium.launch(headless=True)
+        #browser = playwright.chromium.launch(headless=False)
         page = browser.new_page()
 
         # Navegar a la página de Google
