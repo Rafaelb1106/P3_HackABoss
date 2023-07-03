@@ -1,7 +1,8 @@
 from playwright.sync_api import sync_playwright
-
+import streamlit as st
 def main():
     with sync_playwright() as playwright:
+        st.title("prueba")
         browser = playwright.chromium.launch(headless=True)
         #browser = playwright.chromium.launch(headless=False)
         page = browser.new_page()
@@ -26,9 +27,9 @@ def main():
         titles = [title.inner_text() for title in result_titles]
 
         # Imprimir los títulos de los resultados
-        print("Resultados de búsqueda:")
+        st.write("Resultados de búsqueda:")
         for title in titles:
-            print("- " + title)
+            st.warning("- " + title)
 
         browser.close()
 
