@@ -621,6 +621,7 @@ def main():
         #-----Gráfico 1. Duración / cantidad pelis
         try:
             fig, ax = plt.subplots(figsize=(8, 4))
+            dfselec_duracion = dfselec.copy()
             dfselec_duracion = dfselec[dfselec['Duración'] != 0]
             sns.histplot(data=dfselec_duracion, x='Duración', kde=True, bins=30, color='purple', ax=ax)
             # Configurar ejes y título
