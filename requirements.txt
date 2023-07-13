@@ -23,3 +23,6 @@ requests==2.26.0
 beautifulsoup4==4.9.3
 plotly==5.1.0
 playwright==1.35.0
+opencv-python==4.7.0.72
+wordcloud==1.8.2.2
+squarify==0.4.3
